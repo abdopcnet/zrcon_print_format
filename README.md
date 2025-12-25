@@ -1,5 +1,8 @@
 ### Zrcon Print Format
 
+![Version](https://img.shields.io/badge/version-25.12.2025-blue)
+
+
 Zrcon Print Format
 
 ### Installation
