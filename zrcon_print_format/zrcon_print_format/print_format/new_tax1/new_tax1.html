@@ -1,0 +1,332 @@
+<style>
+html{
+    direction:ltr !important;
+    font-size:1.4rem;
+    font-weight:700;
+}
+span{
+    display: inline-block;
+}
+.text-right1{
+    text-align: right;
+}
+.text-left1{
+    text-align: left;
+}
+.d-flex {
+    display:flex;
+}
+.flex-row {
+    flex-direction:row;
+}
+.justify-content-between{
+    justify-content:space-between;
+}
+.justify-content-center{
+     justify-content:center;
+}
+hr{
+    margin-top: 1px; 
+    margin-bottom: 1px; 
+    border: 0; 
+    border-top: 3px solid #000000;
+    width: 100%;
+}
+.print-format table, .print-format tr, 
+.print-format td, .print-format div, .print-format p {
+    line-height: 150%;
+    vertical-align: middle;
+}
+.table{
+    margin:0;
+}
+.print-format td, .print-format th{
+    padding: 10 0 !important;
+}
+.no-border th, .no-border td{
+    border: none !important;
+}
+.print-format .letter-head {
+    margin-bottom: 0px;
+}
+@media (max-width: 700px) {
+    html {
+        font-size: 1rem;
+    }
+    .d-flex,
+    .print-format table {
+        flex-direction: column !important;
+        width: 100%;
+    }
+    .flex-row {
+        flex-direction: column !important;
+    }
+    [style*="width:18%"], [style*="width:30%"], [style*="width:34%"], [style*="width:40%"], [style*="width:24%"], [style*="width:82%"] {
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 4px;
+    }
+}
+</style>
+
+<div id="header-html" style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;">
+    <div>
+       {% if doc.qr_code %}
+            <img src="{{ doc.qr_code }}" style="max-width:250px;">
+       {% else %}
+           <p style="font-size: big; color: red;">لم يتم توليد رمز QR.</p>
+       {% endif %}
+    </div>
+
+    <div style="color:#436784;font-size:2rem;font-weight:700;">فاتورة ضريبية</div>
+    <div class="letter-head">
+        {% set company = frappe.get_doc('Company',  doc.company ) %}
+        {% if company.company_logo %}
+        <img src="{{ company.company_logo }}" height="100px" width="100px" > 
+        {% endif %}
+    </div>
+</div>
+<hr>
+{% set doc1 = frappe.get_doc('Company',  doc.company ) %}
+<div>
+    <div style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;">
+    <div>
+        <span style="min-width:140px;">Company name:</span>
+        <span>{% if doc1.name %}{{ doc1.name }}{% endif %}</span> <!-- الإنجليزية يسار -->
+    </div>
+    <div>
+        <span>شركة زاركون</span>
+        <span style="min-width:80px; text-align: right;">: اسم الشركة</span> <!-- العربية يمين -->
+    </div>
+</div>
+{% if doc.company_address %}
+    {% set company_addr = frappe.get_doc('Address', doc.company_address) %}
+    <div style="display:flex; flex-direction:row; align-items:flex-end; margin-bottom: 2px;">
+       <div style="flex-shrink: 0;">
+          <span style="min-width:140px;">Company Address:</span>
+       </div>
+       <div style="flex: 1; text-align: center;">
+          <span>
+             {{ company_addr.address_line1 or '' }}{% if company_addr.address_line2 %}, {{ company_addr.address_line2 }}{% endif %}{% if company_addr.city %}, {{ company_addr.city }}{% endif %}{% if company_addr.state %}, {{ company_addr.state }}{% endif %}{% if company_addr.country %}, {{ company_addr.country }}{% endif %}
+          </span>
+       </div>
+       <div style="flex-shrink: 0; text-align: right;">
+          <span style="min-width:80px;">: عنوان الشركة</span>
+       </div>
+    </div>
+{% endif %}
+
+    <div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;">
+        <div>
+           <span style="min-width:140px;">VAT Reg. Number:</span>
+<span>{{ frappe.db.get_value("Company", doc.company, "tax_id") or "" }}</span>
+        </div>
+        <div>
+             <span>{% if doc1.tax_id %}{{ doc1.tax_id }}{% endif %}</span>
+             <span style="min-width:80px; text-align: right;">
+                 : الرقم الضريبي
+             </span>
+        </div>
+    </div>
+    <div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;">
+        <div >
+            <span style="min-width:140px;">Date:</span>
+            <span>{% if doc.posting_date %}{{ doc.get_formatted("posting_date") }}{% endif %}</span>
+        </div>
+        <div>
+            <span>{% if doc.posting_date %}{{ doc.get_formatted("posting_date") }}{% endif %}</span>
+            <span style="min-width:80px; text-align: right;">: التاريخ</span>
+        </div>
+    </div>
+</div>
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;">
+    <div>
+        <span style="min-width:140px;">Invoice Number:</span>
+        <span>{{ doc.name }}</span>
+    </div>
+    <div>
+        <span>{{ doc.name }}</span>
+        <span style="min-width:80px; text-align: right;"> : رقم الفاتورة</span>
+    </div>
+</div>
+<hr>
+{% set customer_doc = frappe.get_doc('Customer', doc.customer) %}
+<div  style="display:flex; flex-direction:row; align-items:flex-end; margin-bottom: 2px;">
+    <div style="flex-shrink: 0;">
+         <span style="min-width:140px;">Client:</span>
+    </div>
+    <div style="flex: 1; text-align: center;">
+        <span>{{ customer_doc.customer_name }}</span>
+    </div>
+    <div style="flex-shrink: 0; text-align: right;">
+        <span style="min-width:80px;"> : العميل</span>
+    </div>
+</div>
+<div style="display:flex; flex-direction:row; align-items:flex-end; margin-bottom: 2px;">
+   <div style="flex-shrink: 0;">
+      <span style="min-width:140px;">VAT Reg. Number:</span>
+   </div>
+   <div style="flex: 1; text-align: center;">
+      <span>{{ doc.tax_id or 'غير متوفر' }}</span>
+   </div>
+   <div style="flex-shrink: 0; text-align: right;">
+      <span style="min-width:80px;">: الرقم الضريبي</span>
+   </div>
+</div>
+{% if doc.customer_address %}
+   {% set customer_address = frappe.get_doc('Address', doc.customer_address) %}
+   <div style="display:flex; flex-direction:row; align-items:flex-end; margin-bottom: 2px;">
+      <div style="flex-shrink: 0;">
+         <span style="min-width:140px;">Customer Address:</span>
+      </div>
+      <div style="flex: 1; text-align: center;">
+         <span>
+            {{ customer_address.address_line1 or '' }}{% if customer_address.address_line2 %}, {{ customer_address.address_line2 }}{% endif %}{% if customer_address.city %}, {{ customer_address.city }}{% endif %}{% if customer_address.state %}, {{ customer_address.state }}{% endif %}{% if customer_address.country %}, {{ customer_address.country }}{% endif %}
+         </span>
+      </div>
+      <div style="flex-shrink: 0; text-align: right;">
+         <span style="min-width:80px;">: عنوان العميل</span>
+      </div>
+   </div>
+{% endif %}
+
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end; margin-top:6px;color: white;">
+    <div style="background:#323543; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>
+            تاريخ الإستحقاق
+        </span>
+    </div>
+    <div style="background:#323543; margin-right: 2px; padding:1px; text-align:center; width:40%;">
+        <span>شروط الدفع</span>
+    </div>
+    <div style="background:#323543; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>الوظيفة</span>
+    </div>
+    <div style="background:#323543;  padding:1px; text-align:center; width:24%;">
+        <span>المفوتر</span>
+    </div>
+</div>
+ <div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end; margin-top:6px;color: black;">
+    <div style=" margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>{{ doc.due_date }}</span>
+    </div>
+    <div style=" margin-right: 2px; padding:1px; text-align:center; width:40%;">
+       <span>دفع فوري</span>
+    </div>
+    <div style= "margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>بائع</span>
+    </div>
+    {% set username = frappe.get_doc('User', doc.owner) %}
+    <div style="  padding:1px; text-align:center; width:24%;">
+        <span>{{ username.full_name }}</span>
+    </div>
+</div>
+
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end; margin-top:6px;color: white;">
+    <div style="background:#323543; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>الإجمالي</span>
+    </div>
+    <div style="background:#323543;  padding:1px; text-align:center; width:30%;">
+        <span>السعر</span>
+    </div>
+    <div style="background:#323543;  2px; padding:1px; text-align:center; width:18%;">
+        <span>الكمية</span>
+    </div>
+    <div style="background:#323543;  padding:1px; text-align:center; width:34%;">
+        <span>المنتج</span>
+    </div>
+</div>
+
+{% for item in doc.items %}
+    <div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black;">
+        <div style="background:{% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %}; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+            <span>
+                {{ item.net_amount }} ر.س
+            </span>
+        </div>
+        <div style="background:{% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  padding:1px; text-align:center; width:30%;">
+            <span>
+                {{ item.net_rate }} ر.س
+            </span>
+        </div>
+        <div style="background: {% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  2px; padding:1px; text-align:center; width:18%;">
+            <span>
+                {{ item.qty }}
+            </span>
+        </div>
+        <div style="background: {% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  padding:1px; text-align:center; width:34%;">
+            <span>
+                {{ item.item_name }}
+            </span>
+        </div>
+    </div>
+{% endfor %}
+
+{# التكملة التلقائية للجدول في حالة وجود عدد أصناف أقل من 12 #}
+{% if doc.items|length < 12 %}
+    {% for icount in range((12 - doc.items|length)) %}
+        <div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black;">
+            <div style="background:{% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %}; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+               <span style="visibility:hidden">demo</span>
+            </div>
+            <div style="background:{% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  padding:1px; text-align:center; width:30%;">
+               <span style="visibility:hidden">demo</span>
+            </div>
+            <div style="background: {% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  2px; padding:1px; text-align:center; width:18%;">
+               <span style="visibility:hidden">demo</span>
+            </div>
+            <div style="background: {% if loop.index%2 == 0 %}#d5e0ea {% else %} #fff{% endif %};  padding:1px; text-align:center; width:34%;">
+               <span style="visibility:hidden">demo</span>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black;">
+    <div style="background:#fff; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>
+            {{ doc.net_total }} ر.س
+        </span>
+    </div>
+    <div style="background:#fff ;  padding:1px; text-align:center; width:82%;">
+        <span>Total Without VAT</span>
+        <span>الإجمالي الفرعي</span>
+    </div>
+</div>
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black;">
+    <div style="background:#d5e0ea; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>
+            {{ doc.total_taxes_and_charges }} ر.س
+        </span>
+    </div>
+    <div style="background:#d5e0ea ;  padding:1px; text-align:center; width:82%;">
+        <span>VAT(15%)</span>
+        <span>ضريبة قيمة مضافة</span>
+    </div>
+</div>
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black;">
+    <div style="background:#fff; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+        <span>
+            {{ doc.grand_total }} ر.س
+        </span>
+    </div>
+    <div style="background:#fff ;  padding:1px; text-align:center; width:82%;">
+        <span>Total With VAT</span>
+        <span>الإجمالي شامل الضريبة</span>
+    </div>
+</div>
+
+<div  style="display:flex; flex-direction:row; justify-content: space-between;align-items:flex-end;color: black; margin-top:24px">
+    <div style="background:#fff; margin-right: 2px; padding:1px; text-align:center; width:18%;">
+    </div>
+    <div style="background:#fff ;  padding:1px; text-align:center; width:82%;">
+         <span style="font-size:12px;font-weight:300;">
+            {{ doc.in_words }}           
+        </span>
+    </div>
+</div>
+
+<div style="background:#fff; margin-top: 48px;  text-align:center; font-size:14px;font-weight:500;">
+    !شكرا لتعاملك معنا
+</div>
