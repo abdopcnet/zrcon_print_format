@@ -327,6 +327,35 @@ hr{
     </div>
 </div>
 
-<div style="background:#fff; margin-top: 48px;  text-align:center; font-size:14px;font-weight:500;">
-    !شكرا لتعاملك معنا
+<!-- Signatures - Moved to bottom, PDF compatible -->
+<div style="width:100%; margin-top:30px; margin-bottom:10px; overflow:hidden; background:#fff; font-family:'Cairo', Tahoma, Arial, sans-serif; line-height:1; border:none; padding:10px 0; page-break-inside:avoid;">
+  <table style="width:100%; border:none; background:none; border-spacing:0; direction:rtl; line-height:1; margin:0; padding:0;">
+    <tbody>
+      <tr>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; padding:5px; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; width:50%;">
+          البائع
+        </td>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; padding:5px; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; width:50%;">
+          المستلم
+        </td>
+      </tr>
+      <tr>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; height:30px; padding:5px 5px 0 5px;"></td>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; height:30px; padding:5px 5px 0 5px;"></td>
+      </tr>
+      <tr>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; padding:0 5px; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; height:1px;">
+          <div style="width:150px; margin:0 auto; border-top:2px dotted #000;"></div>
+        </td>
+        <td style="font-family:'Cairo', Arial, sans-serif; font-size:0.92em; padding:0 5px; vertical-align:middle; color:#222; font-weight:700; letter-spacing:0.1px; text-align:center; border:none; height:1px;">
+          <div style="width:150px; margin:0 auto; border-top:2px dotted #000;"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+<!-- Footer from Letter Head -->
+{% if footer %}
+{{ footer | safe }}
+{% endif %}
